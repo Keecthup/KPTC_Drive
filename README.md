@@ -1,1 +1,0 @@
-# KPTC_Drive
