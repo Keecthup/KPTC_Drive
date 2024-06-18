@@ -57,7 +57,7 @@ public class FileUploadController {
 
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
+                "Вы успешно загрузили " + file.getOriginalFilename() + "!");
 
         return "redirect:/";
     }
@@ -75,7 +75,7 @@ public class FileUploadController {
             if (existed) {
                 return ResponseEntity.status(HttpStatus.OK).body("Deleted " + filename);
             } else{
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.OK).body("File not found");
             }
 
         } catch (Exception e) {
