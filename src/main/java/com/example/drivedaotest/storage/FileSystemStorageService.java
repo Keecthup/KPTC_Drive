@@ -107,4 +107,14 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Could not initialize com.example.drivedaotest.storage", e);
         }
     }
+
+    @Override
+    public boolean delete(String filename) {
+        try {
+            Path file = rootLocation.resolve(filename);
+            return Files.deleteIfExists(file);
+        } catch (IOException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
 }
