@@ -117,4 +117,19 @@ public class FileSystemStorageService implements StorageService {
             throw new RuntimeException("Error: " + e.getMessage());
         }
     }
+   @Autowired
+    public Path rename(String filename) {
+       try{
+           Path file = rootLocation.resolve(filename);
+           Path newFile = file;
+           return Files.move(file, newFile);
+       }
+       catch (IOException e){
+           throw new RuntimeException("Error: " + e.getMessage());
+       }
+
+
+    }
+
+
 }
