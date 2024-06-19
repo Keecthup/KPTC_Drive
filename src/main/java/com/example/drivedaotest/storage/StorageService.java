@@ -25,4 +25,8 @@ public interface StorageService {
     boolean rename(String filename, String newFilename);
 
     void create(String filename);
+
+    Path changeDir(String folder);
+
+    Path backDir();
 }

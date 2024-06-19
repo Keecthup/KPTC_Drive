@@ -2,6 +2,7 @@ package com.example.drivedaotest.controller;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -107,6 +108,28 @@ public class FileController {
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during file creation");
+        }
+    }
+
+    @GetMapping("/directories/{folder:.+}")
+    @ResponseBody
+    public ResponseEntity<String> changeDirectory(@PathVariable String folder) {
+        try {
+            Path newDirectory = storageService.changeDir(folder);
+            return ResponseEntity.status(HttpStatus.OK).body("Directory changed to: " + newDirectory.toString());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during directory change");
+        }
+    }
+
+    @GetMapping("/back")
+    @ResponseBody
+    public ResponseEntity<String> backDirectory() {
+        try {
+            Path newDirectory = storageService.backDir();
+            return ResponseEntity.status(HttpStatus.OK).body("Directory changed to: " + newDirectory.toString());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during directory change");
         }
     }
 }
