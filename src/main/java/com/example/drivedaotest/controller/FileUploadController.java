@@ -1,5 +1,11 @@
 package com.example.drivedaotest.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +103,29 @@ public class FileUploadController {
         }
     }
 
+    @PostMapping("/files/create")
+    public ResponseEntity<String> createFile(@RequestParam("filename") String filename) {
+        if (filename == null || filename.trim().isEmpty() || !filename.contains(".")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Название файла не может быть пустым и должно содержать расширение.");
+        }
+
+        String extension = filename.substring(filename.lastIndexOf(".") + 1);
+        if (!isValidExtension(extension)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Недопустимое расширение файла.");
+        }
+
+        try {
+            Path newFile = storageService.load(filename);
+            Files.createFile(newFile);
+            return ResponseEntity.status(HttpStatus.CREATED).body("File created: " + filename);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during file creation");
+        }
+    }
+
+    public boolean isValidExtension(String extension) {
+        List<String> extensions = new ArrayList<>(Arrays.asList("pptx","txt","word"));
+        return extensions.contains(extension.toLowerCase());
+    }
 }
 

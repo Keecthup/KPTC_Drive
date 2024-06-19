@@ -23,4 +23,5 @@ public interface StorageService {
     boolean delete(String filename);
 
     boolean rename(String filename, String newFilename);
+
 }
