@@ -1,11 +1,8 @@
 package com.example.drivedaotest.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +51,7 @@ public class FileController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+                "attachment; filename=\"" + URLEncoder.encode(Objects.requireNonNull(file.getFilename()), StandardCharsets.UTF_8) + "\"").body(file);
     }
 
     @PostMapping("/")
@@ -101,10 +98,11 @@ public class FileController {
 
     @PostMapping("/files/create")
     public ResponseEntity<String> createFile(@RequestParam("filename") String filename) {
-        if (!filename.trim().contains(".") || filename.trim().length() != filename.trim().lastIndexOf(".") + 1) {
+        if (!filename.trim().contains(".") || filename.trim().length() == filename.trim().lastIndexOf(".") + 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Название файла не может быть пустым и должно содержать расширение.");
         }
         try {
+            storageService.create(filename);
             return ResponseEntity.status(HttpStatus.CREATED).body("File Created: " + filename);
         }
         catch (Exception e){
