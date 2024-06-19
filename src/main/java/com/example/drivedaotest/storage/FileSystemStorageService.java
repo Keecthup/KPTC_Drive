@@ -116,6 +116,7 @@ public class FileSystemStorageService implements StorageService {
         } catch (IOException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
+        
     }
 
     @Override
@@ -124,10 +125,17 @@ public class FileSystemStorageService implements StorageService {
             Path source = rootLocation.resolve(filename);
             Path target = source.resolveSibling(newFilename);
             Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-            return true;
+            return Files.exists(target);
         } catch (IOException e) {
             throw new StorageException("Failed to rename file", e);
         }
     }
-
+    public void create(String filename){
+        try {
+            Path newFile = rootLocation.resolve(filename);
+            Files.createFile(newFile);
+        } catch (IOException e) {
+            throw new StorageException("Failed to create file", e);
+        }
+    }
 }

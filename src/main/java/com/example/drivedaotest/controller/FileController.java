@@ -24,12 +24,12 @@ import com.example.drivedaotest.storage.StorageFileNotFoundException;
 import com.example.drivedaotest.storage.StorageService;
 
 @Controller
-public class FileUploadController {
+public class FileController {
 
     private final StorageService storageService;
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileController(StorageService storageService) {
         this.storageService = storageService;
     }
 
@@ -37,7 +37,7 @@ public class FileUploadController {
     public String listUploadedFiles(Model model) {
 
         model.addAttribute("files", storageService.loadAll().map(
-                        path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                        path -> MvcUriComponentsBuilder.fromMethodName(FileController.class,
                                 "serveFile", path.getFileName().toString()).build().toUri().toString())
                 .collect(Collectors.toList()));
 
@@ -77,16 +77,12 @@ public class FileUploadController {
     public ResponseEntity<String> deleteFile(@PathVariable String filename) {
         try {
             boolean existed = storageService.delete(filename);
-
             if (existed) {
-                return ResponseEntity.status(HttpStatus.OK).body("Deleted " + filename);
-            } else{
-                return ResponseEntity.status(HttpStatus.OK).body("File not found");
-            }
-
+                return ResponseEntity.status(HttpStatus.OK).body("Deleted " + filename);        }
+            else{
+                return ResponseEntity.status(HttpStatus.OK).body("File not found");        }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.OK).body("Error");
-        }
+            return ResponseEntity.status(HttpStatus.OK).body("Error");    }
     }
 
     @PostMapping("/files/{filename:.+}/rename")
@@ -105,27 +101,16 @@ public class FileUploadController {
 
     @PostMapping("/files/create")
     public ResponseEntity<String> createFile(@RequestParam("filename") String filename) {
-        if (filename == null || filename.trim().isEmpty() || !filename.contains(".")) {
+        if (!filename.trim().contains(".") || filename.trim().length() != filename.trim().lastIndexOf(".") + 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Название файла не может быть пустым и должно содержать расширение.");
         }
-
-        String extension = filename.substring(filename.lastIndexOf(".") + 1);
-        if (!isValidExtension(extension)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Недопустимое расширение файла.");
-        }
-
         try {
-            Path newFile = storageService.load(filename);
-            Files.createFile(newFile);
-            return ResponseEntity.status(HttpStatus.CREATED).body("File created: " + filename);
-        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("File Created: " + filename);
+        }
+        catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during file creation");
         }
     }
-
-    public boolean isValidExtension(String extension) {
-        List<String> extensions = new ArrayList<>(Arrays.asList("pptx","txt","word"));
-        return extensions.contains(extension.toLowerCase());
-    }
 }
+
 

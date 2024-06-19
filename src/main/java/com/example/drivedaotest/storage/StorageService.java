@@ -24,4 +24,5 @@ public interface StorageService {
 
     boolean rename(String filename, String newFilename);
 
+    void create(String filename);
 }
