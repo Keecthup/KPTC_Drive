@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
+    private Path userLocation;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -30,6 +31,7 @@ public class FileSystemStorageService implements StorageService {
         }
 
         this.rootLocation = Paths.get(properties.getLocation());
+        this.userLocation = rootLocation;
     }
 
     @Override
@@ -38,10 +40,10 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            Path destinationFile = this.rootLocation.resolve(
+            Path destinationFile = this.userLocation.resolve(
                             Paths.get(Objects.requireNonNull(file.getOriginalFilename())))
                     .normalize().toAbsolutePath();
-            if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+            if (!destinationFile.getParent().equals(this.userLocation.toAbsolutePath())) {
                 // This is a security check
                 throw new StorageException(
                         "Cannot store file outside current directory.");
@@ -59,9 +61,9 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Stream<Path> loadAll() {
         try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
+            return Files.walk(this.userLocation, 1)
+                    .filter(path -> !path.equals(this.userLocation))
+                    .map(this.userLocation::relativize);
         }
         catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
@@ -71,7 +73,7 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public Path load(String filename) {
-        return rootLocation.resolve(filename);
+        return userLocation.resolve(filename);
     }
 
     @Override
@@ -95,13 +97,13 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+        FileSystemUtils.deleteRecursively(userLocation.toFile());
     }
 
     @Override
     public void init() {
         try {
-            Files.createDirectories(rootLocation);
+            Files.createDirectories(userLocation);
         }
         catch (IOException e) {
             throw new StorageException("Could not initialize com.example.drivedaotest.storage", e);
@@ -111,10 +113,51 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public boolean delete(String filename) {
         try {
-            Path file = rootLocation.resolve(filename);
+            Path file = userLocation.resolve(filename);
             return Files.deleteIfExists(file);
         } catch (IOException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
+        
+    }
+
+    @Override
+    public boolean rename(String filename, String newFilename){
+        try {
+            Path source = userLocation.resolve(filename);
+            Path target = source.resolveSibling(newFilename);
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+            return Files.exists(target);
+        } catch (IOException e) {
+            throw new StorageException("Failed to rename file", e);
+        }
+    }
+
+    @Override
+    public void create(String filename){
+        try {
+            Path newFile = userLocation.resolve(filename);
+            Files.createFile(newFile);
+        } catch (IOException e) {
+            throw new StorageException("Failed to create file", e);
+        }
+    }
+
+    @Override
+    public Path changeDir(String folder) {
+        Path newLocation = this.userLocation.resolve(folder).normalize().toAbsolutePath();
+        if (!Files.isDirectory(newLocation)) {
+            throw new StorageException("Directory does not exist: " + folder);
+        }
+        this.userLocation = newLocation;
+        return newLocation.getFileName();
+    }
+
+    @Override
+    public Path backDir() {
+        if (!userLocation.toAbsolutePath().normalize().equals(rootLocation.toAbsolutePath().normalize())) {
+            userLocation = userLocation.getParent();
+        }
+        return userLocation.getFileName();
     }
 }

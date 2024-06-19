@@ -10,8 +10,16 @@
         <table>
             <tr><td>Файл для загрузки:</td><td><input type="file" name="file" /></td></tr>
             <tr><td></td><td><input type="submit" value="Загрузить" /></td></tr>
+
         </table>
     </form>
+    <form method="POST" enctype="multipart/form-data" action="/">
+        <table>
+            <tr><td></td><td><input type="text" value="Имя файла" name="file"/></td></tr>
+            <tr><td></td><td><input type="button" value="Переименовать на:"/></td></tr>
+            <tr><td></td><td><input type="text" value="" name="newFile"/></td></tr>
+        </table>
+    </form>>
 </div>
 
 <div>
