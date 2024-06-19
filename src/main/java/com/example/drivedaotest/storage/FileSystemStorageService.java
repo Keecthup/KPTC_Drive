@@ -117,18 +117,17 @@ public class FileSystemStorageService implements StorageService {
             throw new RuntimeException("Error: " + e.getMessage());
         }
     }
-   @Autowired
-    public Path rename(String filename) {
-       try{
-           Path file = rootLocation.resolve(filename);
-           Path newFile = file;
-           return Files.move(file, newFile);
-       }
-       catch (IOException e){
-           throw new RuntimeException("Error: " + e.getMessage());
-       }
 
-
+    @Override
+    public boolean rename(String filename, String newFilename){
+        try {
+            Path source = rootLocation.resolve(filename);
+            Path target = source.resolveSibling(newFilename);
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+            return true;
+        } catch (IOException e) {
+            throw new StorageException("Failed to rename file", e);
+        }
     }
 
 

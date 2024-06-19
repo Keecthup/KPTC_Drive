@@ -22,5 +22,5 @@ public interface StorageService {
 
     boolean delete(String filename);
 
-    Path rename(String filename);
+    boolean rename(String filename, String newFilename);
 }

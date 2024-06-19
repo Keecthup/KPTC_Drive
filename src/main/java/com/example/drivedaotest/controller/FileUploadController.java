@@ -1,7 +1,5 @@
 package com.example.drivedaotest.controller;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,15 +82,18 @@ public class FileUploadController {
             return ResponseEntity.status(HttpStatus.OK).body("Error");
         }
     }
-    @GetMapping("/files/{filename:.+}")
-    public ResponseEntity<String> renameFile(@PathVariable String filename){
-        try {
-            Path newFile = storageService.rename(filename);
-            return Files.copy(filename, newFile);
 
-        }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.OK).body("Error");
+    @PostMapping("/files/{filename:.+}/rename")
+    public ResponseEntity<String> renameFile(@PathVariable String filename, @RequestParam("newFilename") String newFilename) {
+        try {
+            boolean renamed = storageService.rename(filename, newFilename);
+            if (renamed) {
+                return ResponseEntity.status(HttpStatus.OK).body("File renamed to " + newFilename);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during renaming");
         }
     }
 
