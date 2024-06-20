@@ -1,6 +1,6 @@
 package com.example.drivedaotest.repository;
 
-import entity.FileUser;
+import com.example.drivedaotest.entity.FileUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
