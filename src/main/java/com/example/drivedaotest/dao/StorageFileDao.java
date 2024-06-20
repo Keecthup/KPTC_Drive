@@ -1,6 +1,6 @@
-package dao;
+package com.example.drivedaotest.dao;
 
-import entity.StorageFile;
+import com.example.drivedaotest.entity.StorageFile;
 
 import java.util.List;
 

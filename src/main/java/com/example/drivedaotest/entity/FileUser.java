@@ -1,10 +1,6 @@
-package com.example.drivedaotest.DB;
+package com.example.drivedaotest.entity;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class FileUser {
@@ -12,11 +8,16 @@ public class FileUser {
   @GeneratedValue(strategy= GenerationType.AUTO)
   private long id;
 
+  @Column(unique = true)
   private String userLogin;
 
   private String userPassword;
 
+  private String userSurname;
 
+  private String userName;
+
+  private String userMiddleName;
 
   public long getId() {
     return id;

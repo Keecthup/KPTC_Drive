@@ -1,5 +1,6 @@
 package com.example.drivedaotest.DB;
 
+import com.example.drivedaotest.entity.FileUser;
 import com.example.drivedaotest.storage.StorageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +22,10 @@ public class FileUserController {
         this.storageService = storageService;
     }
 
-    @PostMapping("/add") // Map ONLY POST Requests
+    @PostMapping("/add")
     public @ResponseBody String addNewUser ( @RequestParam("login") String login
             , @RequestParam("password") String password) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
+
 
         FileUser n = new FileUser();
         n.setUserLogin(login);

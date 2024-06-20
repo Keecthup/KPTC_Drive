@@ -1,6 +1,6 @@
-package dao;
+package com.example.drivedaotest.dao;
 
-import com.example.drivedaotest.DB.FileUser;
+import com.example.drivedaotest.entity.FileUser;
 import java.util.List;
 
 public interface FileUserDao {

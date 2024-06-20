@@ -119,16 +119,6 @@ public class FileController {
         }
     }
 
-    @GetMapping("/directories/{folder:.+}")
-    @ResponseBody
-    public ResponseEntity<String> changeDirectory(@PathVariable String folder) {
-        try {
-            Path newDirectory = storageService.changeDir(folder);
-            return ResponseEntity.status(HttpStatus.OK).body("Directory changed to: " + newDirectory.toString());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during directory change");
-        }
-    }
 
     @GetMapping("/back")
     @ResponseBody
