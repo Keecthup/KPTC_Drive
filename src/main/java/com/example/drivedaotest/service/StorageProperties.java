@@ -1,4 +1,4 @@
-package com.example.drivedaotest.storage;
+package com.example.drivedaotest.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

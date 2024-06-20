@@ -1,4 +1,4 @@
-package com.example.drivedaotest.storage;
+package com.example.drivedaotest.service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
