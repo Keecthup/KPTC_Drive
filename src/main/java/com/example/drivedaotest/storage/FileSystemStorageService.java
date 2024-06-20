@@ -101,16 +101,6 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void init() {
-        try {
-            Files.createDirectories(userLocation);
-        }
-        catch (IOException e) {
-            throw new StorageException("Could not initialize com.example.drivedaotest.storage", e);
-        }
-    }
-
-    @Override
     public boolean delete(String filename) {
         try {
             Path file = userLocation.resolve(filename);
@@ -134,7 +124,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void create(String filename){
+    public void createFile(String filename){
         try {
             Path newFile = userLocation.resolve(filename);
             Files.createFile(newFile);
@@ -143,23 +133,6 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    @Override
-    public Path changeDir(String folder) {
-        Path newLocation = this.userLocation.resolve(folder).normalize().toAbsolutePath();
-        if (!Files.isDirectory(newLocation)) {
-            throw new StorageException("Directory does not exist: " + folder);
-        }
-        this.userLocation = newLocation;
-        return newLocation.getFileName();
-    }
-
-    @Override
-    public Path backDir() {
-        if (!userLocation.toAbsolutePath().normalize().equals(rootLocation.toAbsolutePath().normalize())) {
-            userLocation = userLocation.getParent();
-        }
-        return userLocation.getFileName();
-    }
     @Override
     public void createDir(String folder){
         try {
@@ -170,17 +143,47 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Failed to create new folder", e);
         }
     }
+
+    @Override
+    public Path changeDir(String folder) {
+        Path newLocation = userLocation.resolve(folder).normalize().toAbsolutePath();
+        if (!Files.isDirectory(newLocation)) {
+            throw new StorageException("Directory does not exist: " + folder);
+        }
+        userLocation = newLocation;
+        return newLocation.getFileName();
+    }
+
+    @Override
+    public Path backDir() {
+        if (!userLocation.toAbsolutePath().normalize().equals(rootLocation.toAbsolutePath().normalize())) {
+            userLocation = userLocation.getParent();
+        }
+        return userLocation.getFileName();
+    }
+
     @Override
     public void moveToDir(String filename, String folder) {
         try {
             Path file = userLocation.resolve(filename);
             Path folderToMove = userLocation.resolve(folder);
             if (!Files.isDirectory(folderToMove)) {
-                throw new StorageException("Directory does not exist: " + folder);        }
-            Files.move(file, folderToMove.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+                throw new StorageException("Directory does not exist: " + folder);
             }
-            catch (IOException e)
-            {        throw new StorageException("Failed to move file", e);
+            Files.move(file, folderToMove.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to move file", e);
+        }
+    }
+
+    @Override
+    public void init() {
+        try {
+            Files.createDirectories(userLocation);
+        }
+        catch (IOException e) {
+            throw new StorageException("Could not initialize com.example.drivedaotest.storage", e);
         }
     }
 }
