@@ -51,6 +51,11 @@ public class FileController {
         if (file == null)
             return ResponseEntity.notFound().build();
 
+        if (!filename.contains(".")){
+            storageService.changeDir(filename);
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + URLEncoder.encode(Objects.requireNonNull(file.getFilename()), StandardCharsets.UTF_8) + "\"").body(file);
     }

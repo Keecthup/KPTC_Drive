@@ -16,11 +16,6 @@ public class FileUser {
 
   private String userPassword;
 
-  private String userSurname;
-
-  private String userName;
-
-  private String userMiddleName;
 
 
   public long getId() {
@@ -49,31 +44,5 @@ public class FileUser {
     this.userPassword = userPassword;
   }
 
-
-  public String getUserSurname() {
-    return userSurname;
-  }
-
-  public void setUserSurname(String userSurname) {
-    this.userSurname = userSurname;
-  }
-
-
-  public String getUserName() {
-    return userName;
-  }
-
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-
-
-  public String getUserMiddleName() {
-    return userMiddleName;
-  }
-
-  public void setUserMiddleName(String userMiddleName) {
-    this.userMiddleName = userMiddleName;
-  }
 
 }
