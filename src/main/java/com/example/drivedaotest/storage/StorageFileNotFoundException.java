@@ -1,4 +1,4 @@
-package com.example.drivedaotest.exeption;
+package com.example.drivedaotest.storage;
 
 public class StorageFileNotFoundException extends StorageException {
 

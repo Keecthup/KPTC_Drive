@@ -1,4 +1,4 @@
-package com.example.drivedaotest.service;
+package com.example.drivedaotest.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +16,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.example.drivedaotest.exeption.StorageException;
-import com.example.drivedaotest.exeption.StorageFileNotFoundException;
 
 @Service
 public class FileSystemStorageService implements StorageService {

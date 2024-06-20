@@ -1,4 +1,4 @@
-package com.example.drivedaotest.service;
+package com.example.drivedaotest.storage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +27,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUserLogin())
                 .password(user.getUserPassword())
-                .roles(user.getUserRole()) // Здесь можно добавить роли пользователя
                 .build();
     }
 }

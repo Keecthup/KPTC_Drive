@@ -14,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.drivedaotest.exeption.StorageFileNotFoundException;
-import com.example.drivedaotest.service.StorageService;
+import com.example.drivedaotest.storage.StorageFileNotFoundException;
+import com.example.drivedaotest.storage.StorageService;
 
 @Controller
 public class FileUploadController {

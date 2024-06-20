@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-import com.example.drivedaotest.service.StorageProperties;
-import com.example.drivedaotest.service.StorageService;
+import com.example.drivedaotest.storage.StorageProperties;
+import com.example.drivedaotest.storage.StorageService;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
