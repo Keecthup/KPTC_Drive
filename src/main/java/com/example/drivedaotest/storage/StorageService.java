@@ -22,4 +22,15 @@ public interface StorageService {
 
     boolean delete(String filename);
 
+    boolean rename(String filename, String newFilename);
+
+    void createFile(String filename);
+
+    Path changeDir(String folder);
+
+    Path backDir();
+
+    void createDir(String folder);
+
+    void moveToDir(String filename, String folder);
 }
