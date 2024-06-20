@@ -8,6 +8,7 @@ public class FileUser {
   private long id;
   private String userLogin;
   private String userPassword;
+  private String userRole;
   private String userSurname;
   private String userName;
   private String userMiddleName;
@@ -39,6 +40,13 @@ public class FileUser {
     this.userPassword = userPassword;
   }
 
+  public String getUserRole() {
+    return userRole;
+  }
+
+  public void setUserRole(String userRole) {
+    this.userRole = userRole;
+  }
 
   public String getUserSurname() {
     return userSurname;
