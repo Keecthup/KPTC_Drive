@@ -29,4 +29,8 @@ public interface StorageService {
     Path changeDir(String folder);
 
     Path backDir();
+
+    void createDir(String folder);
+
+    void moveToDir(String filename, String folder);
 }

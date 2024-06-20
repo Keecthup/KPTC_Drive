@@ -132,6 +132,29 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during directory change");
         }
     }
+    @PostMapping("files/createDirectory")
+    @ResponseBody
+    public ResponseEntity<String> createDirectory(@RequestParam("folder") String folder){
+        try{
+            storageService.createDir(folder);
+
+            return ResponseEntity.status(HttpStatus.OK).body("Directory created!");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during creating folder");
+        }
+    }
+    @PostMapping("files/moveTo")
+    @ResponseBody
+    public ResponseEntity<String> moveToDirectory(@RequestParam("filename") String filename, @RequestParam("folder") String folder){
+        try{
+            storageService.moveToDir(filename, folder);
+            return ResponseEntity.status(HttpStatus.OK).body("File moved successfully!");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during moving file");
+        }
+    }
 }
 
 

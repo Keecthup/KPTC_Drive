@@ -160,4 +160,27 @@ public class FileSystemStorageService implements StorageService {
         }
         return userLocation.getFileName();
     }
+    @Override
+    public void createDir(String folder){
+        try {
+            Path newFolder = userLocation.resolve(folder);
+            Files.createDirectory(newFolder);
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to create new folder", e);
+        }
+    }
+    @Override
+    public void moveToDir(String filename, String folder) {
+        try {
+            Path file = userLocation.resolve(filename);
+            Path folderToMove = userLocation.resolve(folder);
+            if (!Files.isDirectory(folderToMove)) {
+                throw new StorageException("Directory does not exist: " + folder);        }
+            Files.move(file, folderToMove.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            }
+            catch (IOException e)
+            {        throw new StorageException("Failed to move file", e);
+        }
+    }
 }
