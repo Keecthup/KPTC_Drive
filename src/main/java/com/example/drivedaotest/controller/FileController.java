@@ -51,6 +51,11 @@ public class FileController {
         if (file == null)
             return ResponseEntity.notFound().build();
 
+        if (!filename.contains(".")){
+            storageService.changeDir(filename);
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + URLEncoder.encode(Objects.requireNonNull(file.getFilename()), StandardCharsets.UTF_8) + "\"").body(file);
     }
@@ -99,11 +104,14 @@ public class FileController {
 
     @PostMapping("/files/create")
     public ResponseEntity<String> createFile(@RequestParam("filename") String filename) {
-        if (!filename.trim().contains(".") || filename.trim().length() == filename.trim().lastIndexOf(".") + 1) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Название файла не может быть пустым и должно содержать расширение.");
-        }
         try {
-            storageService.create(filename);
+            if (filename.trim().contains(".") && filename.trim().length() != filename.trim().lastIndexOf(".") + 1) {
+                storageService.createFile(filename);
+            }else if (!filename.trim().isEmpty()) {
+                storageService.createDir(filename);
+            }else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Название файла не может быть пустым и должно содержать расширение.");
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body("File Created: " + filename);
         }
         catch (Exception e){
@@ -111,16 +119,6 @@ public class FileController {
         }
     }
 
-    @GetMapping("/directories/{folder:.+}")
-    @ResponseBody
-    public ResponseEntity<String> changeDirectory(@PathVariable String folder) {
-        try {
-            Path newDirectory = storageService.changeDir(folder);
-            return ResponseEntity.status(HttpStatus.OK).body("Directory changed to: " + newDirectory.toString());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during directory change");
-        }
-    }
 
     @GetMapping("/back")
     @ResponseBody
@@ -130,6 +128,18 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.OK).body("Directory changed to: " + newDirectory.toString());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during directory change");
+        }
+    }
+
+    @PostMapping("files/moveTo")
+    @ResponseBody
+    public ResponseEntity<String> moveToDirectory(@RequestParam("filename") String filename, @RequestParam("folder") String folder){
+        try{
+            storageService.moveToDir(filename, folder);
+            return ResponseEntity.status(HttpStatus.OK).body("File moved successfully!");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during moving file");
         }
     }
 }

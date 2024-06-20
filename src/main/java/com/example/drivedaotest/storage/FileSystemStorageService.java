@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Scope("prototype")
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
@@ -101,16 +103,6 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void init() {
-        try {
-            Files.createDirectories(userLocation);
-        }
-        catch (IOException e) {
-            throw new StorageException("Could not initialize com.example.drivedaotest.storage", e);
-        }
-    }
-
-    @Override
     public boolean delete(String filename) {
         try {
             Path file = userLocation.resolve(filename);
@@ -134,7 +126,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void create(String filename){
+    public void createFile(String filename){
         try {
             Path newFile = userLocation.resolve(filename);
             Files.createFile(newFile);
@@ -144,12 +136,23 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public void createDir(String folder){
+        try {
+            Path newFolder = userLocation.resolve(folder);
+            Files.createDirectory(newFolder);
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to create new folder", e);
+        }
+    }
+
+    @Override
     public Path changeDir(String folder) {
-        Path newLocation = this.userLocation.resolve(folder).normalize().toAbsolutePath();
+        Path newLocation = userLocation.resolve(folder).normalize().toAbsolutePath();
         if (!Files.isDirectory(newLocation)) {
             throw new StorageException("Directory does not exist: " + folder);
         }
-        this.userLocation = newLocation;
+        userLocation = newLocation;
         return newLocation.getFileName();
     }
 
@@ -159,5 +162,30 @@ public class FileSystemStorageService implements StorageService {
             userLocation = userLocation.getParent();
         }
         return userLocation.getFileName();
+    }
+
+    @Override
+    public void moveToDir(String filename, String folder) {
+        try {
+            Path file = userLocation.resolve(filename);
+            Path folderToMove = userLocation.resolve(folder);
+            if (!Files.isDirectory(folderToMove)) {
+                throw new StorageException("Directory does not exist: " + folder);
+            }
+            Files.move(file, folderToMove.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to move file", e);
+        }
+    }
+
+    @Override
+    public void init() {
+        try {
+            Files.createDirectories(userLocation);
+        }
+        catch (IOException e) {
+            throw new StorageException("Could not initialize com.example.drivedaotest.storage", e);
+        }
     }
 }
