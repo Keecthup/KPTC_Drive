@@ -1,15 +1,25 @@
-package entity;
+package com.example.drivedaotest.DB;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class FileUser {
-//  @javax.persistence.id
-//  @GeneratedValue(strategy = GenerationType.IDENTIFY)
-//  @Column(name="id")
+  @Id
+  @GeneratedValue(strategy= GenerationType.AUTO)
   private long id;
+
   private String userLogin;
+
   private String userPassword;
+
   private String userSurname;
+
   private String userName;
+
   private String userMiddleName;
 
 
