@@ -31,7 +31,7 @@ public class FileController {
         this.storageService = storageService;
     }
 
-    @GetMapping("/fas")
+    @GetMapping("/")
     public String listUploadedFiles(Model model) {
 
         model.addAttribute("files", storageService.loadAll().map(
@@ -39,7 +39,7 @@ public class FileController {
                                 "serveFile", path.getFileName().toString()).build().toUri().toString())
                 .collect(Collectors.toList()));
 
-        return "uploadForm";
+        return "index";
     }
 
     @GetMapping("/files/{filename:.+}")
@@ -60,7 +60,7 @@ public class FileController {
                 "attachment; filename=\"" + URLEncoder.encode(Objects.requireNonNull(file.getFilename()), StandardCharsets.UTF_8) + "\"").body(file);
     }
 
-    @PostMapping("/saf")
+    @PostMapping("/")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) {
 
