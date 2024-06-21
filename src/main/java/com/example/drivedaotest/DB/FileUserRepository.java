@@ -1,11 +1,8 @@
 package com.example.drivedaotest.DB;
 
 import com.example.drivedaotest.entity.FileUser;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-// This will be AUTO IMPLEMENTED by Spring
-// into a Bean called Book
-// CRUD refers Create, Read, Update, Delete
-public interface FileUserRepository extends CrudRepository<FileUser, Long> {
-
+public interface FileUserRepository extends JpaRepository<FileUser, Long> {
+    public FileUser findByLogin(String login);
 }

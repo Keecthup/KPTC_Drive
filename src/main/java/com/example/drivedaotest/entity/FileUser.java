@@ -9,15 +9,55 @@ public class FileUser {
   private long id;
 
   @Column(unique = true)
-  private String userLogin;
+  private String login;
 
-  private String userPassword;
+  private String password;
 
-  private String userSurname;
+  private String surname;
 
-  private String userName;
+  private String name;
 
-  private String userMiddleName;
+  public String getLogin() {
+    return login;
+  }
+
+  public void setLogin(String login) {
+    this.login = login;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getSurname() {
+    return surname;
+  }
+
+  public void setSurname(String userSurname) {
+    this.surname = userSurname;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String userName) {
+    this.name = userName;
+  }
+
+  public String getMiddleName() {
+    return middleName;
+  }
+
+  public void setMiddleName(String userMiddleName) {
+    this.middleName = userMiddleName;
+  }
+
+  private String middleName;
 
   public long getId() {
     return id;
@@ -27,23 +67,6 @@ public class FileUser {
     this.id = id;
   }
 
-
-  public String getUserLogin() {
-    return userLogin;
-  }
-
-  public void setUserLogin(String userLogin) {
-    this.userLogin = userLogin;
-  }
-
-
-  public String getUserPassword() {
-    return userPassword;
-  }
-
-  public void setUserPassword(String userPassword) {
-    this.userPassword = userPassword;
-  }
 
 
 }
