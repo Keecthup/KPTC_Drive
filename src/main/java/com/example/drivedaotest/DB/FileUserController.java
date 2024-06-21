@@ -28,8 +28,8 @@ public class FileUserController {
 
 
         FileUser n = new FileUser();
-        n.setUserLogin(login);
-        n.setUserPassword(password);
+        n.setLogin(login);
+        n.setPassword(password);
         fileUserRepository.save(n);
         storageService.createDir(login);
         return "Saved";

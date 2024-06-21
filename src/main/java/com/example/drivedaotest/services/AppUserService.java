@@ -20,10 +20,9 @@ public class AppUserService implements UserDetailsService {
         FileUser fileUser = fileUserRepository.findByLogin(login);
 
         if(fileUser != null){
-            var springUser = User.withUsername(fileUser.getLogin()).password(fileUser.getPassword()).build();
-            return springUser;
+            return User.withUsername(fileUser.getLogin()).password(fileUser.getPassword()).build();
+        } else{
+            throw new UsernameNotFoundException(login);
         }
-
-        return null;
     }
 }
